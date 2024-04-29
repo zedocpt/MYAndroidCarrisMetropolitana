@@ -1,0 +1,6 @@
+package di
+
+class AppModule {
+
+
+}
