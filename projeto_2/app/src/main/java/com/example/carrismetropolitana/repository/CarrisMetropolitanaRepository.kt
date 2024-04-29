@@ -14,12 +14,11 @@ import javax.inject.Inject
 class CarrisMetropolitanaRepository @Inject constructor(private val api: CarrisMetropolitanaApi){
 
     suspend fun getLines() : DataOrException<LinesResponseData,Boolean, Exception > {
-        val responseData = try{
-            api.getLinesResponseData()
+        val responseData = try{ api.getLinesResponseData()
         }catch (exception: Exception){
-            return DataOrException(e = exception)
+            return DataOrException(e = exception, loading = false)
         }
-        return DataOrException(data = responseData)
+        return DataOrException(data = responseData, loading = false)
     }
 
     suspend fun getLineId(lineId : String) : DataOrException<LineResponseData,Boolean, Exception > {

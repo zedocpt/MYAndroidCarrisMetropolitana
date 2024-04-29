@@ -1,5 +1,6 @@
 package com.example.carrismetropolitana.screens.showLines
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,10 +20,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.carrismetropolitana.data.DataOrException
+import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
 import com.example.carrismetropolitana.model.responseData.lines.LinesResponseData
 import com.example.carrismetropolitana.navigation.CarrisMetropolitanaScreens
 import com.example.carrismetropolitana.screens.favorites.FavoriteViewModel
@@ -43,7 +45,12 @@ import com.example.carrismetropolitana.screens.showLines.entities.LinesWrapperUi
 import com.example.carrismetropolitana.screens.showLines.entities.ToFavorite
 import com.example.carrismetropolitana.utils.hexStringToColor
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar
+import com.example.carrismetropolitana.widgets.CarrisMetroolitanaSearchBar
 import com.example.carrismetropolitana.widgets.CarrisMetropolitanaBottomNavigation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
 
 @Composable
 fun ShowLinesScreen(
@@ -60,76 +67,95 @@ fun ShowLinesScreen(
             )
         },
         bottomBar = { CarrisMetropolitanaBottomNavigation(navController) }
-    ) { padding ->
-        ShowLinesContent(showLinesViewModel, favoriteViewModel, padding, navController)
+    ) { paddingValues ->
+        
+        //val isSearching = showLinesViewModel.isSearching.collectAsState()
+        val linesData = showLinesViewModel.linesList
+        val linesFilterList = showLinesViewModel.linesFilterList.collectAsState().value
+        val favoritelist = favoriteViewModel.favList.collectAsState().value
+        var linesWrapperListData by remember {
+            mutableStateOf<List<LinesWrapperUiModel>>(arrayListOf())
+        }
+
+        if (linesData.loading == true) {
+            CircularProgressIndicator(
+                Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+            )
+        } else {
+            linesData.data?.let { linesResponseData ->
+
+                val lines = arrayListOf<LineResponseData>()
+                if (linesFilterList.isEmpty()) {
+                    lines.addAll(linesResponseData)
+                } else {
+                    lines.addAll(linesFilterList)
+                }
+                LaunchedEffect(lines, favoritelist) {
+                    val newLinesWrapperListData = withContext(Dispatchers.Default) {
+                        if (favoritelist.isNotEmpty()) {
+                            lines.map { line ->
+                                val favorite = favoritelist.find { it.id == line.id }
+                                if (favorite != null) {
+                                    LinesWrapperUiModel(line, true)
+                                } else {
+                                    LinesWrapperUiModel(line, false)
+                                }
+                            }
+                        } else {
+                            lines.map { line ->
+                                LinesWrapperUiModel(line, false)
+                            }
+                        }
+                    }
+                    linesWrapperListData = newLinesWrapperListData
+                }
+            }
+
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+
+                CarrisMetroolitanaSearchBar(hint = "Search",
+                    onSearchClicked = {
+
+                    }, onTextChange = {
+                        showLinesViewModel.onSearchTextChange(it)
+                        Log.d("TAG", "linesWrapperListData")
+                    })
+
+                ShowLinesContent(favoriteViewModel, navController, linesWrapperListData)
+            }
+        }
     }
 }
 
 @Composable
 fun ShowLinesContent(
-    showLinesViewModel: ShowLinesViewModel,
     favoriteViewModel: FavoriteViewModel,
-    paddingValues: PaddingValues,
-    navController: NavController
+    navController: NavController,
+    linesWrapperListData: List<LinesWrapperUiModel>
 ) {
-
-    val linesData = produceState<DataOrException<LinesResponseData, Boolean, Exception>>(
-        initialValue = DataOrException(loading = true)
-    ) {
-        value = showLinesViewModel.getLines()
-    }.value
-
-    val favoritelist = favoriteViewModel.favList.collectAsState().value
-    if (linesData.loading == true) {
-        CircularProgressIndicator(
-            Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        )
-    } else {
-        Surface(modifier = Modifier.padding(2.dp)) {
-            linesData.data?.let { linesResponseData ->
-                var linesWrapperListData by remember {
-                    mutableStateOf<List<LinesWrapperUiModel>>(arrayListOf())
-                }
-
-                if (favoritelist.isNotEmpty()) {
-                    linesWrapperListData = linesResponseData.map { line ->
-                        if (favoritelist.isNotEmpty()) {
-                            val favorite = favoritelist.find { it -> it.id == line.id }
-                            if (favorite != null) {
-                                LinesWrapperUiModel(line, true)
-                            } else {
-                                LinesWrapperUiModel(line, false)
-                            }
-                        } else {
-                            LinesWrapperUiModel(line, false)
-                        }
-                    }
-                } else {
-                    linesWrapperListData = linesResponseData.map { line ->
-                        LinesWrapperUiModel(line, false)
-                    }
-                }
-
-                LazyColumn(
-                    modifier = Modifier.padding(2.dp),
-                    contentPadding = PaddingValues(1.dp)
-                ) {
-                    items(items = linesWrapperListData) { lineWrapperData ->
-                        LineDetailRow(lineWrapperData,
-                            onDetailClick = {
-                                navController.navigate(CarrisMetropolitanaScreens.SHOW_LINE.name + "/${lineWrapperData.lineResponseData.id}")
-                            },
-                            onAddFavoriteClick = {
-                                favoriteViewModel.insertFavorite(
-                                    lineWrapperData.ToFavorite()
-                                )
-                            }, onRemoveFavoriteClick = {
-                                favoriteViewModel.deleteFavorite(lineWrapperData.lineResponseData.id)
-                            })
-                    }
-                }
+    Surface(modifier = Modifier.padding(2.dp)) {
+        LazyColumn(
+            modifier = Modifier.padding(2.dp),
+            contentPadding = PaddingValues(1.dp)
+        ) {
+            items(items = linesWrapperListData) { lineWrapperData ->
+                LineDetailRow(lineWrapperData,
+                    onDetailClick = {
+                        navController.navigate(CarrisMetropolitanaScreens.SHOW_LINE.name + "/${lineWrapperData.lineResponseData.id}")
+                    },
+                    onAddFavoriteClick = {
+                        favoriteViewModel.insertFavorite(
+                            lineWrapperData.ToFavorite()
+                        )
+                    }, onRemoveFavoriteClick = {
+                        favoriteViewModel.deleteFavorite(lineWrapperData.lineResponseData.id)
+                    })
             }
         }
     }
@@ -196,12 +222,10 @@ fun LineDetailRow(
                         .padding(8.dp)
                         .clickable {
                             onAddFavoriteClick.invoke()
-
                         }
                 )
             }
         }
     }
 }
-
 
