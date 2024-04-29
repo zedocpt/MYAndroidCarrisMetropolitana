@@ -58,8 +58,7 @@ fun CarrisMetropolitanaNavigation() {
         ) { navBack ->
             navBack.arguments?.getString("line").let { lineId ->
                 val detailAlertViewModel = hiltViewModel<LineDetailViewModel>()
-                val favoriteViewModel = hiltViewModel<FavoriteViewModel>()
-                LineDetailScreen(detailAlertViewModel, favoriteViewModel, navController, lineId)
+                LineDetailScreen(detailAlertViewModel,  navController, lineId)
             }
         }
 

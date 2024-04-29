@@ -77,7 +77,6 @@ fun CarrisMetroolitanaSearchBar(
                 if (text.text.isEmpty()) {
                     Text(
                         text = hint,
-
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                     )

@@ -48,8 +48,6 @@ import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaSearchBar
 import com.example.carrismetropolitana.widgets.CarrisMetropolitanaBottomNavigation
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 
 @Composable
@@ -68,8 +66,7 @@ fun ShowLinesScreen(
         },
         bottomBar = { CarrisMetropolitanaBottomNavigation(navController) }
     ) { paddingValues ->
-        
-        //val isSearching = showLinesViewModel.isSearching.collectAsState()
+
         val linesData = showLinesViewModel.linesList
         val linesFilterList = showLinesViewModel.linesFilterList.collectAsState().value
         val favoritelist = favoriteViewModel.favList.collectAsState().value
@@ -85,7 +82,6 @@ fun ShowLinesScreen(
             )
         } else {
             linesData.data?.let { linesResponseData ->
-
                 val lines = arrayListOf<LineResponseData>()
                 if (linesFilterList.isEmpty()) {
                     lines.addAll(linesResponseData)
@@ -97,11 +93,7 @@ fun ShowLinesScreen(
                         if (favoritelist.isNotEmpty()) {
                             lines.map { line ->
                                 val favorite = favoritelist.find { it.id == line.id }
-                                if (favorite != null) {
-                                    LinesWrapperUiModel(line, true)
-                                } else {
-                                    LinesWrapperUiModel(line, false)
-                                }
+                                LinesWrapperUiModel(line, favorite != null)
                             }
                         } else {
                             lines.map { line ->
@@ -111,6 +103,8 @@ fun ShowLinesScreen(
                     }
                     linesWrapperListData = newLinesWrapperListData
                 }
+            }?: run {
+                //todo empty state
             }
 
             Column(
@@ -118,7 +112,6 @@ fun ShowLinesScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-
                 CarrisMetroolitanaSearchBar(hint = "Search",
                     onSearchClicked = {
 

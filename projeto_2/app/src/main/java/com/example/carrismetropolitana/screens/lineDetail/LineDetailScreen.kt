@@ -17,24 +17,21 @@ import androidx.navigation.NavHostController
 import com.example.carrismetropolitana.data.DataOrException
 import com.example.carrismetropolitana.model.Favorite
 import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
-import com.example.carrismetropolitana.screens.favorites.FavoriteViewModel
 import com.example.carrismetropolitana.screens.lineDetail.viewModel.LineDetailViewModel
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar
 
 @Composable
 fun LineDetailScreen(
     detailAlertViewModel: LineDetailViewModel,
-    favoriteViewModel: FavoriteViewModel,
     navController: NavHostController,
     lineId: String? = null
 ) {
-    ShowLineContent(detailAlertViewModel, favoriteViewModel, navController, lineId.orEmpty())
+    ShowLineContent(detailAlertViewModel,  navController, lineId.orEmpty())
 }
 
 @Composable
 fun ShowLineContent(
     detailAlertViewModel: LineDetailViewModel,
-    favoriteViewModel: FavoriteViewModel,
     navController: NavHostController,
     lineId: String
 ) {
@@ -49,20 +46,24 @@ fun ShowLineContent(
     } else {
         Scaffold(
             topBar = {
-                CarrisMetroolitanaAppBar(navigationIcon =  true, lineId = lineId, title = "", navController= navController,
+                CarrisMetroolitanaAppBar(navigationIcon = true,
+                    lineId = lineId,
+                    title = lineData.data?.long_name.orEmpty(),
+                    navController = navController,
                     getFavorite = {
-                        if(lineData.data ==  null)  null else{
+                        if (lineData.data == null) null else {
                             lineData.data?.let {
-                                Favorite(id = it.id,
+                                Favorite(
+                                    id = it.id,
                                     long_name = it.long_name,
                                     short_name = it.short_name,
                                     text_color = it.text_color,
-                                    color = it.color)
+                                    color = it.color
+                                )
                             }
-                            }
+                        }
                     })
-            },
-            bottomBar = { }
+            }
         ) { padding ->
             lineData.data?.let {
                 Surface(
