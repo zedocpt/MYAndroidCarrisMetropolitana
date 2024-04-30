@@ -21,8 +21,6 @@ import androidx.navigation.NavController
 import com.example.carrismetropolitana.data.DataOrException
 import com.example.carrismetropolitana.model.responseData.alert.AlertsResponseData
 import com.example.carrismetropolitana.model.responseData.alert.EntityResponseData
-import com.example.carrismetropolitana.model.uiModel.alert.AlertsUiModel
-import com.example.carrismetropolitana.model.uiModel.alert.EntityUiModel
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar
 import com.example.carrismetropolitana.widgets.CarrisMetropolitanaBottomNavigation
 
@@ -30,7 +28,7 @@ import com.example.carrismetropolitana.widgets.CarrisMetropolitanaBottomNavigati
 fun AlertScreen(alertViewModel: AlertViewModel, navController: NavController, title: String) {
     Scaffold(
         topBar = {
-            CarrisMetroolitanaAppBar(false, title, navController, getFavorite = null)
+            CarrisMetroolitanaAppBar(false, title, navController, getFavoriteDbModel = null)
         },
         bottomBar = { CarrisMetropolitanaBottomNavigation(navController) }
     ) { padding ->

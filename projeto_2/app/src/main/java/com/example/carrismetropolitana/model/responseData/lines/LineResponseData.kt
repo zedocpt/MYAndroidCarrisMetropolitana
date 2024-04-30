@@ -1,7 +1,5 @@
 package com.example.carrismetropolitana.model.responseData.lines
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 
 data class LineResponseData(
     val color: String,

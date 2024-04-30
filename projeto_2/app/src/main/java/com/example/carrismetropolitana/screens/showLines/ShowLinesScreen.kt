@@ -31,8 +31,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.carrismetropolitana.navigation.CarrisMetropolitanaScreens
 import com.example.carrismetropolitana.screens.favorites.FavoriteViewModel
-import com.example.carrismetropolitana.screens.showLines.entities.LinesWrapperUiModel
-import com.example.carrismetropolitana.screens.showLines.entities.ToFavorite
+import com.example.carrismetropolitana.screens.uiModel.favorite.LinesWrapperUiModel
+import com.example.carrismetropolitana.screens.uiModel.favorite.ToFavorite
 import com.example.carrismetropolitana.utils.hexStringToColor
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaSearchBar
@@ -49,7 +49,7 @@ fun ShowLinesScreen(
         topBar = {
             CarrisMetroolitanaAppBar(
                 title = title, navController = navController,
-                getFavorite = null
+                getFavoriteDbModel = null
             )
         },
         bottomBar = { CarrisMetropolitanaBottomNavigation(navController) }
@@ -77,7 +77,7 @@ fun ShowLinesScreen(
 
 @Composable
 fun populateDataLines(
-    list: ArrayList<LinesWrapperUiModel>,
+    list: List<LinesWrapperUiModel>,
     paddingValues: PaddingValues,
     navController: NavHostController,
     showLinesViewModel: ShowLinesViewModel,
@@ -115,14 +115,14 @@ fun ShowLinesContent(
             items(items = linesWrapperListData) { lineWrapperData ->
                 LineDetailRow(lineWrapperData,
                     onDetailClick = {
-                        navController.navigate(CarrisMetropolitanaScreens.SHOW_LINE.name + "/${lineWrapperData.lineResponseData.id}")
+                        navController.navigate(CarrisMetropolitanaScreens.SHOW_LINE.name + "/${lineWrapperData.lineUiModel.id}")
                     },
                     onAddFavoriteClick = {
                         favoriteViewModel.insertFavorite(
                             lineWrapperData.ToFavorite()
                         )
                     }, onRemoveFavoriteClick = {
-                        favoriteViewModel.deleteFavorite(lineWrapperData.lineResponseData.id)
+                        favoriteViewModel.deleteFavorite(lineWrapperData.lineUiModel.id)
                     })
             }
         }
@@ -131,7 +131,7 @@ fun ShowLinesContent(
 
 @Composable
 fun LineDetailRow(
-    lineResponseData: LinesWrapperUiModel,
+    linesWrapperUiModel: LinesWrapperUiModel,
     onDetailClick: () -> Unit,
     onAddFavoriteClick: () -> Unit,
     onRemoveFavoriteClick: () -> Unit,
@@ -151,11 +151,11 @@ fun LineDetailRow(
             Surface(
                 modifier = Modifier.padding(8.dp),
                 shape = RoundedCornerShape(12.dp),
-                color = hexStringToColor(lineResponseData.lineResponseData.color)
+                color = hexStringToColor(linesWrapperUiModel.lineUiModel.color)
             ) {
                 Text(
-                    color = hexStringToColor(lineResponseData.lineResponseData.text_color),
-                    text = lineResponseData.lineResponseData.short_name,
+                    color = hexStringToColor(linesWrapperUiModel.lineUiModel.text_color),
+                    text = linesWrapperUiModel.lineUiModel.short_name,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(8.dp)
                 )
@@ -167,12 +167,12 @@ fun LineDetailRow(
                     .padding(end = 8.dp)
             ) {
                 Text(
-                    text = lineResponseData.lineResponseData.long_name,
+                    text = linesWrapperUiModel.lineUiModel.long_name,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
 
-            if (lineResponseData.isFavorite) {
+            if (linesWrapperUiModel.isFavorite) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = null,

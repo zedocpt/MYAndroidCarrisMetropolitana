@@ -3,9 +3,10 @@ package com.example.carrismetropolitana.screens.favorites
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.carrismetropolitana.model.Favorite
+import com.example.carrismetropolitana.model.db.FavoriteDbModel
+import com.example.carrismetropolitana.model.db.toUiMode
+import com.example.carrismetropolitana.screens.uiModel.favorite.FavoriteUiModel
 import com.example.carrismetropolitana.repository.CarrisMetropolitanaDbRepository
-import com.example.carrismetropolitana.screens.showLines.entities.LinesWrapperUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class FavoriteViewModel @Inject constructor(private val repository: CarrisMetropolitanaDbRepository) :
     ViewModel() {
 
-    private val _favList = MutableStateFlow<List<Favorite>>(emptyList())
+    private val _favList = MutableStateFlow<List<FavoriteUiModel>>(emptyList())
     val favList = _favList.asStateFlow()
 
     init {
@@ -29,22 +30,22 @@ class FavoriteViewModel @Inject constructor(private val repository: CarrisMetrop
                     _favList.value = arrayListOf()
                 } else {
                     Log.d("TAG", ":${favList.value}")
-                    _favList.value = listOfFavs
+                    _favList.value = listOfFavs.map { it.toUiMode() }
                 }
             }
         }
     }
 
-    fun insertFavorite(favorite: Favorite) = viewModelScope.launch {
-        repository.insertFavorite(favorite)
+    fun insertFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch {
+        repository.insertFavorite(favoriteDbModel)
     }
 
     fun getFavoriteById(id: String) = viewModelScope.launch {
         repository.getFavoriteById(id)
     }
 
-    fun updateFavorite(favorite: Favorite) = viewModelScope.launch {
-        repository.updateFavorite(favorite)
+    fun updateFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch {
+        repository.updateFavorite(favoriteDbModel)
     }
 
     fun deleteAllFavorites() = viewModelScope.launch {

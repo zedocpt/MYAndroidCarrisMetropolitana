@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.carrismetropolitana.model.Favorite
+import com.example.carrismetropolitana.screens.uiModel.favorite.FavoriteUiModel
 import com.example.carrismetropolitana.navigation.CarrisMetropolitanaScreens
 import com.example.carrismetropolitana.utils.hexStringToColor
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar
@@ -44,7 +44,7 @@ fun FavoriteScreen(
                 title = title,
                 navigationIcon = false,
                 navController = navController,
-                getFavorite = null
+                getFavoriteDbModel = null
             )
         },
         bottomBar = { CarrisMetropolitanaBottomNavigation(navController) }
@@ -59,21 +59,21 @@ fun ShowFavoriteContent(
     navController: NavHostController,
     paddingValues: PaddingValues
 ) {
-    val favoritelist = favoriteViewModel.favList.collectAsState().value
+    val favList = favoriteViewModel.favList.collectAsState().value
 
     Surface(modifier = Modifier.padding(2.dp)) {
-        if (favoritelist.isNotEmpty()) {
+        if (favList.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier.padding(paddingValues),
                 contentPadding = PaddingValues(1.dp)
             ) {
-                items(items = favoritelist) { favoriteItem ->
-                    FavoriteRow(favoriteItem,
+                items(items = favList) { favItem ->
+                    FavoriteRow(favItem,
                         onClick = {
-                            navController.navigate(CarrisMetropolitanaScreens.SHOW_LINE.name + "/${favoriteItem.id}")
+                            navController.navigate(CarrisMetropolitanaScreens.SHOW_LINE.name + "/${favItem.id}")
                         },
                         onDeleteClick = {
-                            favoriteViewModel.deleteFavorite(favoriteItem.id)
+                            favoriteViewModel.deleteFavorite(favItem.id)
                         }
                     )
                 }
@@ -84,7 +84,7 @@ fun ShowFavoriteContent(
 
 @Composable
 fun FavoriteRow(
-    favorite: Favorite,
+    favoriteUiModel: FavoriteUiModel,
     onClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
@@ -104,11 +104,11 @@ fun FavoriteRow(
             Surface(
                 modifier = Modifier.padding(8.dp),
                 shape = RoundedCornerShape(12.dp),
-                color = hexStringToColor(favorite.color)
+                color = hexStringToColor(favoriteUiModel.color)
             ) {
                 Text(
-                    color = hexStringToColor(favorite.text_color),
-                    text = favorite.short_name,
+                    color = hexStringToColor(favoriteUiModel.text_color),
+                    text = favoriteUiModel.short_name,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(8.dp)
                 )
@@ -120,7 +120,7 @@ fun FavoriteRow(
                     .padding(end = 8.dp)
             ) {
                 Text(
-                    text = favorite.long_name,
+                    text = favoriteUiModel.long_name,
                     style = MaterialTheme.typography.bodySmall
                 )
             }

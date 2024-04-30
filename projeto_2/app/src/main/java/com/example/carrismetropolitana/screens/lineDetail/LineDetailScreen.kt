@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.carrismetropolitana.data.DataOrException
-import com.example.carrismetropolitana.model.Favorite
+import com.example.carrismetropolitana.model.db.FavoriteDbModel
 import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
 import com.example.carrismetropolitana.screens.lineDetail.viewModel.LineDetailViewModel
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar
@@ -50,10 +50,10 @@ fun ShowLineContent(
                     lineId = lineId,
                     title = lineData.data?.long_name.orEmpty(),
                     navController = navController,
-                    getFavorite = {
+                    getFavoriteDbModel = {
                         if (lineData.data == null) null else {
                             lineData.data?.let {
-                                Favorite(
+                                FavoriteDbModel(
                                     id = it.id,
                                     long_name = it.long_name,
                                     short_name = it.short_name,

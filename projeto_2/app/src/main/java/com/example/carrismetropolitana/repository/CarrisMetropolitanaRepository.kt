@@ -5,7 +5,7 @@ import com.example.carrismetropolitana.dataSource.LocalDbDataSource
 import com.example.carrismetropolitana.dataSource.NeworkDataSource
 import com.example.carrismetropolitana.model.responseData.alert.AlertsResponseData
 import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
-import com.example.carrismetropolitana.screens.showLines.entities.LinesWrapperUiModel
+import com.example.carrismetropolitana.model.responseData.wrapper.LinesWrapper
 import javax.inject.Inject
 
 class CarrisMetropolitanaRepository @Inject constructor(
@@ -13,27 +13,27 @@ class CarrisMetropolitanaRepository @Inject constructor(
     private val localDbDataSource: LocalDbDataSource
 ) {
 
-    suspend fun GetLineMatchWithFavorites(): DataOrException<ArrayList<LinesWrapperUiModel>, Boolean, Exception> {
-        val linesWrapperUiModelList = arrayListOf<LinesWrapperUiModel>()
+    suspend fun getLineMatchWithFavorites(): DataOrException<ArrayList<LinesWrapper>, Boolean, Exception> {
+        val linesWrapperList = arrayListOf<LinesWrapper>()
         try {
             val lines = dataSource.getLines()
             val lineFavorites = localDbDataSource.getFavoritesSimple()
 
-            if (lineFavorites.isNotEmpty()) {   //todo improvements mapping
+            if (lineFavorites.isNotEmpty()) {
                 lines.map { line ->
                     val favorite = lineFavorites.find { it.id == line.id }
-                    linesWrapperUiModelList.add(LinesWrapperUiModel(line, favorite != null))
+                    linesWrapperList.add(LinesWrapper(line, favorite != null))
                 }
             } else {
                 lines.map { line ->
-                    linesWrapperUiModelList.add(LinesWrapperUiModel(line, false))
+                    linesWrapperList.add(LinesWrapper(line, false))
                 }
             }
 
         } catch (exception: Exception) {
             return DataOrException(e = exception, loading = false)
         }
-        return DataOrException(data = linesWrapperUiModelList, loading = false)
+        return DataOrException(data = linesWrapperList, loading = false)
     }
 
     suspend fun getLineId(lineId: String): DataOrException<LineResponseData, Boolean, Exception> {

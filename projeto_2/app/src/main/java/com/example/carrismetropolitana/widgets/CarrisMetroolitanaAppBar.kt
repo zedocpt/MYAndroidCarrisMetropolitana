@@ -18,7 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.carrismetropolitana.model.Favorite
+import com.example.carrismetropolitana.model.db.FavoriteDbModel
 import com.example.carrismetropolitana.screens.favorites.FavoriteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,7 +28,7 @@ fun CarrisMetroolitanaAppBar(
     title: String = "",
     navController: NavController,
     lineId: String? = null,
-    getFavorite: (() -> Favorite?)?,
+    getFavoriteDbModel: (() -> FavoriteDbModel?)?,
     favoriteViewModel: FavoriteViewModel = hiltViewModel(),
 ) {
 
@@ -59,7 +59,7 @@ fun CarrisMetroolitanaAppBar(
                 if (isAlreadyFavList.isEmpty()) {
                     Icon(
                         modifier = Modifier.clickable {
-                            getFavorite?.let {
+                            getFavoriteDbModel?.let {
                                 it.invoke()?.let { favorite ->
                                     favoriteViewModel.insertFavorite(
                                         favorite
