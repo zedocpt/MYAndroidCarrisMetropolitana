@@ -23,22 +23,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.carrismetropolitana.data.DataOrException
-import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
-import com.example.carrismetropolitana.model.responseData.lines.LinesResponseData
 import com.example.carrismetropolitana.navigation.CarrisMetropolitanaScreens
 import com.example.carrismetropolitana.screens.favorites.FavoriteViewModel
 import com.example.carrismetropolitana.screens.showLines.entities.LinesWrapperUiModel
@@ -47,8 +37,6 @@ import com.example.carrismetropolitana.utils.hexStringToColor
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaSearchBar
 import com.example.carrismetropolitana.widgets.CarrisMetropolitanaBottomNavigation
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 @Composable
 fun ShowLinesScreen(
@@ -67,13 +55,8 @@ fun ShowLinesScreen(
         bottomBar = { CarrisMetropolitanaBottomNavigation(navController) }
     ) { paddingValues ->
 
-        val linesData = showLinesViewModel.linesList
-        val linesFilterList = showLinesViewModel.linesFilterList.collectAsState().value
-        val favoritelist = favoriteViewModel.favList.collectAsState().value
-        var linesWrapperListData by remember {
-            mutableStateOf<List<LinesWrapperUiModel>>(arrayListOf())
-        }
 
+        val linesData = showLinesViewModel.linesList
         if (linesData.loading == true) {
             CircularProgressIndicator(
                 Modifier
@@ -81,50 +64,42 @@ fun ShowLinesScreen(
                     .fillMaxSize()
             )
         } else {
-            linesData.data?.let { linesResponseData ->
-                val lines = arrayListOf<LineResponseData>()
-                if (linesFilterList.isEmpty()) {
-                    lines.addAll(linesResponseData)
-                } else {
-                    lines.addAll(linesFilterList)
+            if (showLinesViewModel.linesFilterList.value.isNotEmpty()) {
+                populateDataLines(showLinesViewModel.linesFilterList.value,paddingValues, navController, showLinesViewModel, favoriteViewModel)
+            }else {
+                linesData.data?.let { list ->
+                    populateDataLines(list,paddingValues, navController, showLinesViewModel, favoriteViewModel)
                 }
-                LaunchedEffect(lines, favoritelist) {
-                    val newLinesWrapperListData = withContext(Dispatchers.Default) {
-                        if (favoritelist.isNotEmpty()) {
-                            lines.map { line ->
-                                val favorite = favoritelist.find { it.id == line.id }
-                                LinesWrapperUiModel(line, favorite != null)
-                            }
-                        } else {
-                            lines.map { line ->
-                                LinesWrapperUiModel(line, false)
-                            }
-                        }
-                    }
-                    linesWrapperListData = newLinesWrapperListData
-                }
-            }?: run {
-                //todo empty state
-            }
-
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                CarrisMetroolitanaSearchBar(hint = "Search",
-                    onSearchClicked = {
-
-                    }, onTextChange = {
-                        showLinesViewModel.onSearchTextChange(it)
-                        Log.d("TAG", "linesWrapperListData")
-                    })
-
-                ShowLinesContent(favoriteViewModel, navController, linesWrapperListData)
             }
         }
     }
 }
+
+@Composable
+fun populateDataLines(
+    list: ArrayList<LinesWrapperUiModel>,
+    paddingValues: PaddingValues,
+    navController: NavHostController,
+    showLinesViewModel: ShowLinesViewModel,
+    favoriteViewModel: FavoriteViewModel
+) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        CarrisMetroolitanaSearchBar(hint = "Search",
+            onSearchClicked = {
+
+            }, onTextChange = {
+                showLinesViewModel.onSearchTextChange(it)
+                Log.d("TAG", "linesWrapperListData")
+            })
+
+        ShowLinesContent(favoriteViewModel, navController, list)
+    }
+}
+
 
 @Composable
 fun ShowLinesContent(

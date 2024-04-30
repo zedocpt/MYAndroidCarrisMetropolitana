@@ -3,7 +3,6 @@ package com.example.carrismetropolitana.model.responseData.lines
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-@Parcelize
 data class LineResponseData(
     val color: String,
     val id: String,
@@ -14,4 +13,4 @@ data class LineResponseData(
     val routes: List<String>,
     val short_name: String,
     val text_color: String
-) : Parcelable
+)

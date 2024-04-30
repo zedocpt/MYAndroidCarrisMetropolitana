@@ -2,6 +2,7 @@ package com.example.carrismetropolitana.screens.lineDetail.viewModel
 
 import androidx.lifecycle.ViewModel
 import com.example.carrismetropolitana.data.DataOrException
+import com.example.carrismetropolitana.dataSource.NeworkDataSource
 import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
 import com.example.carrismetropolitana.model.responseData.lines.LineUiModel
 import com.example.carrismetropolitana.repository.CarrisMetropolitanaRepository
@@ -10,8 +11,8 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class LineDetailViewModel @Inject constructor(private val repository: CarrisMetropolitanaRepository) : ViewModel(){
+class LineDetailViewModel @Inject constructor(private val neworkDataSource: NeworkDataSource) : ViewModel(){
     suspend fun getDetailViewModel(lineId: String): DataOrException<LineResponseData, Boolean, Exception> {
-        return repository.getLineId(lineId)
+        return neworkDataSource.getLineId(lineId)
     }
 }

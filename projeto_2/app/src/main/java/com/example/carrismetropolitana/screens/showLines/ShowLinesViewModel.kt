@@ -1,44 +1,69 @@
 package com.example.carrismetropolitana.screens.showLines
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.carrismetropolitana.data.DataOrException
-import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
-import com.example.carrismetropolitana.model.responseData.lines.LinesResponseData
-import com.example.carrismetropolitana.model.responseData.lines.LinesUiModel
-import com.example.carrismetropolitana.repository.CarrisMetropolitanaRepository
-import com.example.carrismetropolitana.screens.favorites.FavoriteViewModel
 import com.example.carrismetropolitana.screens.showLines.entities.LinesWrapperUiModel
+import com.example.carrismetropolitana.usesCase.GetFavoriteList
+import com.example.carrismetropolitana.usesCase.GetLineMatchWithFavorites
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ShowLinesViewModel @Inject constructor(private val repository: CarrisMetropolitanaRepository) :
-    ViewModel() {
+class ShowLinesViewModel @Inject constructor(
+    private val getLineMatchWithFavorites: GetLineMatchWithFavorites,
+    private val getFavoriteList: GetFavoriteList
+) : ViewModel() {
 
     /***
      * list lines
      */
 
-    private val _linesList: MutableState<DataOrException<LinesResponseData, Boolean, Exception>> =
-        mutableStateOf(DataOrException(LinesResponseData(), false, null))
-    val linesList = _linesList.value
+    private val _linesList: MutableState<DataOrException<ArrayList<LinesWrapperUiModel>, Boolean, Exception>> =
+        mutableStateOf(DataOrException(arrayListOf(), true, null))
+    val linesList: DataOrException<ArrayList<LinesWrapperUiModel>, Boolean, Exception>
+        get() = _linesList.value
 
-    private val _linesFilterList: MutableStateFlow<ArrayList<LineResponseData>> = MutableStateFlow(arrayListOf())
-    var linesFilterList = _linesFilterList.asStateFlow()
+    private var favoritelistSize: MutableState<Int> = mutableStateOf(0)
+    private var favoritelistFirstInteraction: MutableState<Boolean> = mutableStateOf(false)
+
+
+    val linesFilterList: MutableState<ArrayList<LinesWrapperUiModel>> =
+        mutableStateOf(arrayListOf())
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            getLineMatchWithFavorites().let { matchWithFavorites ->
+                _linesList.value = matchWithFavorites
+                favoritelistFirstInteraction.value = true
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            getFavoriteList().distinctUntilChanged().collect { favoriteList ->
+                val currentSize = favoriteList.size
+                if (favoritelistSize.value != currentSize) {
+                    favoritelistSize.value = currentSize
+                    if (favoritelistFirstInteraction.value) {
+                        getLineMatchWithFavorites().let { matchWithFavorites ->
+                            _linesList.value = matchWithFavorites
+                        }
+                    }
+                    if(_searchText.value.isNotEmpty()){
+                        onSearchTextChange(searchText.value)
+                    }
+                }
+            }
+        }
+    }
+
 
     /***
      * for search
@@ -51,46 +76,17 @@ class ShowLinesViewModel @Inject constructor(private val repository: CarrisMetro
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
-    /* var listSearches = searchText.combine(_linesListFlow) { text, lines->
-         if (text.isBlank()){
-             lines
-         }else{
-             lines.filter {
-                 it.doesMatchSearchQuery(text)
-             }
-         }
-     }.stateIn(
-         viewModelScope,
-         SharingStarted.WhileSubscribed(5000),
-         _linesListFlow.value
-     )*/
-
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getLines().let { lines ->
-                linesList.data = lines.data
-            }
-        }
-    }
-
-    suspend fun getLines(): DataOrException<LinesResponseData, Boolean, Exception> {
-        return repository.getLines()
-    }
-
 
     fun onSearchTextChange(search: String) {
-        _searchText.value = search
-
         viewModelScope.launch {
-            val list = arrayListOf<LineResponseData>()
+            _searchText.value = search
+            val list = arrayListOf<LinesWrapperUiModel>()
             _linesList.value.data?.forEach { item ->
-                if (item.short_name.contains(search) ||
-                    item.long_name.contains(search)
-                ){
+                if (item.doesMatchSearchQuery(search)) {
                     list.add(item)
                 }
             }
-            _linesFilterList.value = list
+            linesFilterList.value = list
         }
     }
 }

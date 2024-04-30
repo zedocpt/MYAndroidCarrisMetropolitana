@@ -11,6 +11,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CarrisMetropolitanaDao {
+
+    @Query("SELECT * from fav_lines_tbl")
+    fun getFavoritesSimple() : List<Favorite> //todo melhorar nome
+
     @Query("SELECT * from fav_lines_tbl")
     fun getFavorites() : Flow<List<Favorite>>
     @Query("SELECT * from fav_lines_tbl where id = :favoriteId")
