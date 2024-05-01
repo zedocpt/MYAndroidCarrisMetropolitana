@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class CarrisMetropolitanaDbRepository @Inject constructor(private val  carrisMetropolitanaDao : CarrisMetropolitanaDao) {
 
-    fun getFavorite() : Flow<List<FavoriteDbModel>> = carrisMetropolitanaDao.getFavorites()
+    fun getFavorite() : Flow<List<FavoriteDbModel>> = carrisMetropolitanaDao.getFavoritesWithFlow()
     suspend fun insertFavorite(favoriteDbModel: FavoriteDbModel) = carrisMetropolitanaDao.insertFavorite(favoriteDbModel)
     suspend fun updateFavorite(favoriteDbModel: FavoriteDbModel) =carrisMetropolitanaDao.updateFavorite(favoriteDbModel)
     suspend fun deleteAllFavorites() = carrisMetropolitanaDao.deleteAllFavorites()

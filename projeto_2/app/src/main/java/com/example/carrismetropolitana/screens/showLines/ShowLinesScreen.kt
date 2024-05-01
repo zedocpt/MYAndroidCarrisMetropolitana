@@ -31,8 +31,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.carrismetropolitana.navigation.CarrisMetropolitanaScreens
 import com.example.carrismetropolitana.screens.favorites.FavoriteViewModel
-import com.example.carrismetropolitana.screens.uiModel.favorite.LinesWrapperUiModel
-import com.example.carrismetropolitana.screens.uiModel.favorite.ToFavorite
+import com.example.carrismetropolitana.uiModel.favorite.LinesWrapperUiModel
+import com.example.carrismetropolitana.uiModel.favorite.ToFavorite
 import com.example.carrismetropolitana.utils.hexStringToColor
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaSearchBar
@@ -54,8 +54,6 @@ fun ShowLinesScreen(
         },
         bottomBar = { CarrisMetropolitanaBottomNavigation(navController) }
     ) { paddingValues ->
-
-
         val linesData = showLinesViewModel.linesList
         if (linesData.loading == true) {
             CircularProgressIndicator(

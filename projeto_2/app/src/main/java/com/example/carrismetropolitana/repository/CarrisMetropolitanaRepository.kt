@@ -2,22 +2,22 @@ package com.example.carrismetropolitana.repository
 
 import com.example.carrismetropolitana.data.DataOrException
 import com.example.carrismetropolitana.dataSource.LocalDbDataSource
-import com.example.carrismetropolitana.dataSource.NeworkDataSource
+import com.example.carrismetropolitana.dataSource.NetWorkDataSource
 import com.example.carrismetropolitana.model.responseData.alert.AlertsResponseData
 import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
 import com.example.carrismetropolitana.model.responseData.wrapper.LinesWrapper
 import javax.inject.Inject
 
 class CarrisMetropolitanaRepository @Inject constructor(
-    private val dataSource: NeworkDataSource,
+    private val dataSource: NetWorkDataSource,
     private val localDbDataSource: LocalDbDataSource
 ) {
 
-    suspend fun getLineMatchWithFavorites(): DataOrException<ArrayList<LinesWrapper>, Boolean, Exception> {
+    suspend fun getLinesMatchWithFavorites(): DataOrException<ArrayList<LinesWrapper>, Boolean, Exception> {
         val linesWrapperList = arrayListOf<LinesWrapper>()
         try {
             val lines = dataSource.getLines()
-            val lineFavorites = localDbDataSource.getFavoritesSimple()
+            val lineFavorites = localDbDataSource.getFavorites()
 
             if (lineFavorites.isNotEmpty()) {
                 lines.map { line ->
@@ -29,7 +29,6 @@ class CarrisMetropolitanaRepository @Inject constructor(
                     linesWrapperList.add(LinesWrapper(line, false))
                 }
             }
-
         } catch (exception: Exception) {
             return DataOrException(e = exception, loading = false)
         }

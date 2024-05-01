@@ -1,4 +1,4 @@
-package com.example.carrismetropolitana.screens.uiModel.alert
+package com.example.carrismetropolitana.uiModel.alert
 
 import com.example.carrismetropolitana.model.responseData.alert.ActivePeriodResponseData
 

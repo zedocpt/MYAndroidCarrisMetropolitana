@@ -3,7 +3,7 @@ package com.example.carrismetropolitana.screens.alert
 import androidx.lifecycle.ViewModel
 import com.example.carrismetropolitana.data.DataOrException
 import com.example.carrismetropolitana.model.responseData.alert.AlertsResponseData
-import com.example.carrismetropolitana.screens.uiModel.alert.AlertsUiModel
+import com.example.carrismetropolitana.uiModel.alert.AlertsUiModel
 import com.example.carrismetropolitana.repository.CarrisMetropolitanaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

@@ -5,11 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.carrismetropolitana.data.DataOrException
-import com.example.carrismetropolitana.model.responseData.wrapper.LinesWrapper
-import com.example.carrismetropolitana.screens.uiModel.favorite.LinesWrapperUiModel
-import com.example.carrismetropolitana.screens.uiModel.favorite.toUIModel
-import com.example.carrismetropolitana.usesCase.GetFavoriteList
-import com.example.carrismetropolitana.usesCase.GetLineMatchWithFavorites
+import com.example.carrismetropolitana.uiModel.favorite.LinesWrapperUiModel
+import com.example.carrismetropolitana.uiModel.favorite.toUIModel
+import com.example.carrismetropolitana.usesCase.GetFavoriteListUseCase
+import com.example.carrismetropolitana.usesCase.GetLineMatchWithFavoritesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShowLinesViewModel @Inject constructor(
-    private val getLineMatchWithFavorites: GetLineMatchWithFavorites,
-    private val getFavoriteList: GetFavoriteList
+    private val getLineMatchWithFavoritesUseCase: GetLineMatchWithFavoritesUseCase,
+    private val getFavoriteListUseCase: GetFavoriteListUseCase
 ) : ViewModel() {
 
     /***
@@ -41,7 +40,7 @@ class ShowLinesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            getLineMatchWithFavorites().let { matchWithFavorites ->
+            getLineMatchWithFavoritesUseCase().let { matchWithFavorites ->
                 val list = matchWithFavorites.data?.map {
                     it.toUIModel()
                 }
@@ -51,12 +50,12 @@ class ShowLinesViewModel @Inject constructor(
                 favoritelistFirstInteraction.value = true
             }
 
-            getFavoriteList().distinctUntilChanged().collect { favoriteList ->
+            getFavoriteListUseCase().distinctUntilChanged().collect { favoriteList ->
                 val currentSize = favoriteList.size
                 if (favoritelistSize.value != currentSize) {
                     favoritelistSize.value = currentSize
                     if (favoritelistFirstInteraction.value) {
-                        getLineMatchWithFavorites().let { matchWithFavorites ->
+                        getLineMatchWithFavoritesUseCase().let { matchWithFavorites ->
                             val list = matchWithFavorites.data?.map {
                                 it.toUIModel()
                             }

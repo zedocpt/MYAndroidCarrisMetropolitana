@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.carrismetropolitana.model.db.FavoriteDbModel
 import com.example.carrismetropolitana.model.db.toUiMode
-import com.example.carrismetropolitana.screens.uiModel.favorite.FavoriteUiModel
+import com.example.carrismetropolitana.uiModel.favorite.FavoriteUiModel
 import com.example.carrismetropolitana.repository.CarrisMetropolitanaDbRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

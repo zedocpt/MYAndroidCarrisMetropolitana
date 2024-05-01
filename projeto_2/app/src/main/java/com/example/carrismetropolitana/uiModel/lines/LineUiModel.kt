@@ -1,4 +1,4 @@
-package com.example.carrismetropolitana.screens.uiModel.lines
+package com.example.carrismetropolitana.uiModel.lines
 
 import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
 

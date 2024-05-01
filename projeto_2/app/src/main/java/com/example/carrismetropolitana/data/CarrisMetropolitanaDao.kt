@@ -12,12 +12,14 @@ import kotlinx.coroutines.flow.Flow
 interface CarrisMetropolitanaDao {
 
     @Query("SELECT * from fav_lines_tbl")
-    fun getFavoritesSimple() : List<FavoriteDbModel> //todo melhorar nome
+    fun getFavorites(): List<FavoriteDbModel>
 
     @Query("SELECT * from fav_lines_tbl")
-    fun getFavorites() : Flow<List<FavoriteDbModel>>
-    @Query("SELECT * from fav_lines_tbl where id = :favoriteId")
-    suspend fun getFavById(favoriteId : String) : FavoriteDbModel
+    fun getFavoritesWithFlow(): Flow<List<FavoriteDbModel>>
+
+    @Query("SELECT * from fav_lines_tbl where id = :id")
+    suspend fun getFavById(id: String): FavoriteDbModel
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavorite(favoriteDbModel: FavoriteDbModel)
 
@@ -27,7 +29,6 @@ interface CarrisMetropolitanaDao {
     @Query("DELETE from fav_lines_tbl")
     suspend fun deleteAllFavorites()
 
-    //@Delete ("DELETE from fav_lines_tbl where id = :id")
-    @Query("DELETE from fav_lines_tbl where id= :favoriteId")
-    suspend fun deleteFavorite(favoriteId: String)
+    @Query("DELETE from fav_lines_tbl where id= :id")
+    suspend fun deleteFavorite(id: String)
 }

@@ -1,4 +1,4 @@
-package com.example.carrismetropolitana.screens.uiModel.favorite
+package com.example.carrismetropolitana.uiModel.favorite
 
 
 data class FavoriteUiModel(

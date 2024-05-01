@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.carrismetropolitana.screens.uiModel.favorite.FavoriteUiModel
+import com.example.carrismetropolitana.uiModel.favorite.FavoriteUiModel
 import com.example.carrismetropolitana.navigation.CarrisMetropolitanaScreens
 import com.example.carrismetropolitana.utils.hexStringToColor
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar

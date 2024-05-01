@@ -3,7 +3,7 @@ package com.example.carrismetropolitana.model.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.carrismetropolitana.screens.uiModel.favorite.FavoriteUiModel
+import com.example.carrismetropolitana.uiModel.favorite.FavoriteUiModel
 import javax.annotation.Nonnull
 
 @Entity(tableName = "fav_lines_tbl")

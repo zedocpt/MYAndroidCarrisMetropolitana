@@ -1,9 +1,9 @@
-package com.example.carrismetropolitana.screens.uiModel.favorite
+package com.example.carrismetropolitana.uiModel.favorite
 
 import com.example.carrismetropolitana.model.db.FavoriteDbModel
 import com.example.carrismetropolitana.model.responseData.wrapper.LinesWrapper
-import com.example.carrismetropolitana.screens.uiModel.lines.LineUiModel
-import com.example.carrismetropolitana.screens.uiModel.lines.toUiModel
+import com.example.carrismetropolitana.uiModel.lines.LineUiModel
+import com.example.carrismetropolitana.uiModel.lines.toUiModel
 
 class LinesWrapperUiModel(
     var lineUiModel: LineUiModel,

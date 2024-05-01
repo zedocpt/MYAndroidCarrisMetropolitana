@@ -6,12 +6,12 @@ import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
 import com.example.carrismetropolitana.network.CarrisMetropolitanaApi
 import javax.inject.Inject
 
-class NeworkDataSource @Inject constructor(private val api: CarrisMetropolitanaApi) {
+class NetWorkDataSource @Inject constructor(private val api: CarrisMetropolitanaApi) {
 
     suspend fun getLines() : ArrayList<LineResponseData> {
        return api.getLinesResponseData()
     }
-        suspend fun getLineId(lineId : String) : DataOrException<LineResponseData,Boolean, Exception > {
+    suspend fun getLineId(lineId : String) : DataOrException<LineResponseData,Boolean, Exception > {
         val responseData = try{
             api.getLinesResponseDataById(lineId)
         }catch (exception: Exception){

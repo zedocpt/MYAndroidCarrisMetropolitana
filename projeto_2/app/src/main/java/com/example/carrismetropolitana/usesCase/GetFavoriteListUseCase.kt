@@ -5,7 +5,7 @@ import com.example.carrismetropolitana.repository.CarrisMetropolitanaDbRepositor
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetFavoriteList @Inject constructor(private val carrisMetropolitanaDbRepository: CarrisMetropolitanaDbRepository) {
+class GetFavoriteListUseCase @Inject constructor(private val carrisMetropolitanaDbRepository: CarrisMetropolitanaDbRepository) {
 
     operator fun invoke(): Flow<List<FavoriteDbModel>> {
         return carrisMetropolitanaDbRepository.getFavorite()
