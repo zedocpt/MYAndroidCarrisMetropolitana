@@ -3,9 +3,9 @@ package com.example.carrismetropolitana.uiModel.alert
 import com.example.carrismetropolitana.model.responseData.alert.HeaderResponseData
 
 data class HeaderUiModel(
-    val gtfsRealtimeVersion: String,
-    val incrementality: String,
-    val timestamp: Int
+    val gtfsRealtimeVersion: String? = null,
+    val incrementality: String? = null,
+    val timestamp: Int? = null
 )
 
 fun HeaderResponseData.toUiModel() = HeaderUiModel(

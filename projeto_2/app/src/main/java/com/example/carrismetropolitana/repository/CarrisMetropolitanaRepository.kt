@@ -6,6 +6,7 @@ import com.example.carrismetropolitana.dataSource.NetWorkDataSource
 import com.example.carrismetropolitana.model.responseData.alert.AlertsResponseData
 import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
 import com.example.carrismetropolitana.model.responseData.wrapper.LinesWrapper
+import com.example.carrismetropolitana.retrofit.Result
 import javax.inject.Inject
 
 class CarrisMetropolitanaRepository @Inject constructor(
@@ -16,19 +17,35 @@ class CarrisMetropolitanaRepository @Inject constructor(
     suspend fun getLinesMatchWithFavorites(): DataOrException<ArrayList<LinesWrapper>, Boolean, Exception> {
         val linesWrapperList = arrayListOf<LinesWrapper>()
         try {
-            val lines = dataSource.getLines()
-            val lineFavorites = localDbDataSource.getFavorites()
+            val response = dataSource.getLines()
+            when (response) {
+                is Result.Success -> {
+                    val lineFavorites = localDbDataSource.getFavorites()
+                    val linesNetWork = response.body
+                    if (!linesNetWork.isNullOrEmpty()) {
+                        if (lineFavorites.isNotEmpty()) {
+                            linesNetWork.map { line ->
+                                val favorite = lineFavorites.find { it.id == line.id }
+                                linesWrapperList.add(LinesWrapper(line, favorite != null))
+                            }
+                        } else {
+                            linesNetWork.map { line ->
+                                linesWrapperList.add(LinesWrapper(line, false))
+                            }
+                        }
+                    }
+                    return DataOrException(linesWrapperList, false, null)
+                }
 
-            if (lineFavorites.isNotEmpty()) {
-                lines.map { line ->
-                    val favorite = lineFavorites.find { it.id == line.id }
-                    linesWrapperList.add(LinesWrapper(line, favorite != null))
+                is Result.Error -> {
+                    val code = response.code
+                    val message = response.message
+                    return DataOrException(null, false, Exception("message:$message- code:$code"))
                 }
-            } else {
-                lines.map { line ->
-                    linesWrapperList.add(LinesWrapper(line, false))
-                }
+                else -> {}
             }
+
+
         } catch (exception: Exception) {
             return DataOrException(e = exception, loading = false)
         }

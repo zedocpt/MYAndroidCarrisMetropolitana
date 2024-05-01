@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.navigation.NavController
 import com.example.carrismetropolitana.data.DataOrException
 import com.example.carrismetropolitana.model.responseData.alert.AlertsResponseData
 import com.example.carrismetropolitana.model.responseData.alert.EntityResponseData
+import com.example.carrismetropolitana.uiModel.alert.EntityUiModel
 import com.example.carrismetropolitana.widgets.CarrisMetroolitanaAppBar
 import com.example.carrismetropolitana.widgets.CarrisMetropolitanaBottomNavigation
 
@@ -38,35 +40,36 @@ fun AlertScreen(alertViewModel: AlertViewModel, navController: NavController, ti
 
 @Composable
 fun ShowAlertsContent(alertViewModel: AlertViewModel, paddingValues: PaddingValues) {
-    val alertsData = produceState<DataOrException<AlertsResponseData, Boolean, Exception>>(
-        initialValue = DataOrException(loading = true)
-    ) {
-        value = alertViewModel.getAlerts()
-    }.value
-
-    if (alertsData.loading == true) {
+    val alerts = alertViewModel.alertsList
+    if (alerts.loading == true) {
         CircularProgressIndicator(Modifier.fillMaxSize())
     } else {
-        Surface(modifier = Modifier.padding(2.dp)) {
-            alertsData.data?.let { alertsData ->
-                LazyColumn(
-                    modifier = Modifier.padding(2.dp),
-                    contentPadding = PaddingValues(1.dp)
-                ) {
-                    alertsData.entityResponseData?.let {
-                        items(items = alertsData.entityResponseData) { entity ->
-                            AlertDetailRow(entity)
+        if (alerts.e == null) {
+            Surface(modifier = Modifier.padding(paddingValues)) {
+                alerts.data?.let { alertsData ->
+                    if (!alertsData.entityUiModel.isNullOrEmpty()) {
+                        LazyColumn(
+                            modifier = Modifier.padding(2.dp),
+                            contentPadding = PaddingValues(1.dp)
+                        ) {
+                            items(items =alertsData.entityUiModel) { entityUiModel ->
+                                AlertDetailRow(entityUiModel)
 
+                            }
                         }
                     }
+                } ?: run {
+                    //todo show empty state
                 }
             }
+        } else {
+            //todo show error
         }
     }
 }
 
 @Composable
-fun AlertDetailRow(entityResponseData: EntityResponseData) {
+fun AlertDetailRow(entityUiModel: EntityUiModel) {
     Surface(
         modifier = Modifier
             .padding(3.dp)
@@ -77,7 +80,7 @@ fun AlertDetailRow(entityResponseData: EntityResponseData) {
         Column(
             modifier = Modifier.fillMaxWidth(),
         ) {
-
+            Text(text = entityUiModel.alertUiModel?.cause.orEmpty())
         }
     }
 }

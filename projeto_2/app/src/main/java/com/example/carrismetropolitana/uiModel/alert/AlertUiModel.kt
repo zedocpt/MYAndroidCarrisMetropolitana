@@ -3,26 +3,26 @@ package com.example.carrismetropolitana.uiModel.alert
 import com.example.carrismetropolitana.model.responseData.alert.AlertResponseData
 
 data class AlertUiModel(
-    val activePeriodUiModel: List<ActivePeriodUiModel>,
-    val cause: String,
-    val descriptionTextUiModel: DescriptionTextUiModel,
-    val effect: String,
-    val headerTextUiModel: HeaderTextUiModel,
-    val imageUiModel: ImageUiModel,
-    val informedEntityUiModel: List<InformedUiModel>,
-    val urlUiModel: UrlUiModel
+    val activePeriodUiModel: List<ActivePeriodUiModel>? = null,
+    val cause: String? = null,
+    val descriptionTextUiModel: DescriptionTextUiModel? = null,
+    val effect: String? = null,
+    val headerTextUiModel: HeaderTextUiModel? = null,
+    val imageUiModel: ImageUiModel ? = null,
+    val informedEntityUiModel: List<InformedUiModel>? = null,
+    val urlUiModel: UrlUiModel? = null
 )
 
 fun AlertResponseData.toUiModel() = AlertUiModel(
-    activePeriodUiModel = activePeriodResponseData.map { it.toUiModel() },
+    activePeriodUiModel = activePeriod?.map { it.toUiModel() },
     cause = cause,
-    descriptionTextUiModel = descriptionTextResponseData.toUiModel(),
+    descriptionTextUiModel = descriptionText?.toUiModel(),
     effect = effect,
-    headerTextUiModel = headerTextResponseData.toUiModel(),
-    imageUiModel = imageResponseData.toUiModel(),
-    informedEntityUiModel = informedEntityResponseData.map {
+    headerTextUiModel = headerText?.toUiModel(),
+    imageUiModel = image?.toUiModel(),
+    informedEntityUiModel = informedEntity?.map {
         it.toUiModel()
     },
-    urlUiModel = urlResponseData.toUiModel()
+    urlUiModel = url?.toUiModel()
 )
 

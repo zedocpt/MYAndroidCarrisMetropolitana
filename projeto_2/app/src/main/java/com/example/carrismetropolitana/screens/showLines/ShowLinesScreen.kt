@@ -62,12 +62,30 @@ fun ShowLinesScreen(
                     .fillMaxSize()
             )
         } else {
-            if (showLinesViewModel.linesFilterList.value.isNotEmpty()) {
-                populateDataLines(showLinesViewModel.linesFilterList.value,paddingValues, navController, showLinesViewModel, favoriteViewModel)
-            }else {
-                linesData.data?.let { list ->
-                    populateDataLines(list,paddingValues, navController, showLinesViewModel, favoriteViewModel)
+            if (linesData.e == null) {
+                if (showLinesViewModel.linesFilterList.value.isNotEmpty()) {
+                    populateDataLines(
+                        showLinesViewModel.linesFilterList.value,
+                        paddingValues,
+                        navController,
+                        showLinesViewModel,
+                        favoriteViewModel
+                    )
+                } else {
+                    linesData.data?.let { list ->
+                        populateDataLines(
+                            list,
+                            paddingValues,
+                            navController,
+                            showLinesViewModel,
+                            favoriteViewModel
+                        )
+                    } ?: run {
+                        //todo show empty state
+                    }
                 }
+            }else {
+                //todo show error
             }
         }
     }

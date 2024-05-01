@@ -4,11 +4,11 @@ package com.example.carrismetropolitana.uiModel.alert
 import com.example.carrismetropolitana.model.responseData.alert.DescriptionTextResponseData
 
 data class DescriptionTextUiModel(
-    val translationUiModel: List<TranslationUiModel>
+    val translationUiModel: List<TranslationUiModel>? = null
 )
 
 fun DescriptionTextResponseData.toUiModel() = DescriptionTextUiModel(
-    translationUiModel = translationResponseData.map {
+    translationUiModel = translation?.map {
         it.toUiModel()
     }
 )

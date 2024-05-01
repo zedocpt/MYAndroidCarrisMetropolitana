@@ -1,12 +1,12 @@
 package com.example.carrismetropolitana.model.responseData.alert
 
 data class AlertResponseData(
-    val activePeriodResponseData: List<ActivePeriodResponseData>,
-    val cause: String,
-    val descriptionTextResponseData: DescriptionTextResponseData,
-    val effect: String,
-    val headerTextResponseData: HeaderTextResponseData,
-    val imageResponseData: ImageResponseData,
-    val informedEntityResponseData: List<InformedEntityResponseData>,
-    val urlResponseData: UrlResponseData
+    val activePeriod: List<ActivePeriodResponseData> ? = null,
+    val cause: String? = null,
+    val descriptionText: DescriptionTextResponseData? = null,
+    val effect: String? = null,
+    val headerText: HeaderTextResponseData ? = null,
+    val image: ImageResponseData? = null,
+    val informedEntity: List<InformedEntityResponseData> ? = null,
+    val url: UrlResponseData? = null
 )
