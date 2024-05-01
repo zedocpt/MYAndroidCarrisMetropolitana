@@ -71,16 +71,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //Hilt-Dagger
-    val  hilt_version = "2.46.1"
-    implementation ("com.google.dagger:hilt-android:$hilt_version")
-    kapt ( "com.google.dagger:hilt-compiler:$hilt_version")
+    val hilt_version = "2.46.1"
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    kapt("com.google.dagger:hilt-compiler:$hilt_version")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     //retrofit
     val retrofit_version = "2.10.0"
-    implementation ("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
     val converter_gson = "2.10.0"
-    implementation ("com.squareup.retrofit2:converter-gson:$converter_gson")
+    implementation("com.squareup.retrofit2:converter-gson:$converter_gson")
 
     val lifecycle_version = "2.7.0"
 
@@ -98,6 +98,4 @@ dependencies {
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
 }
