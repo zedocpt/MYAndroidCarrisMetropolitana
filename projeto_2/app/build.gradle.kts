@@ -62,13 +62,24 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.runner)
+
+    //testImplementation(libs.junit)
+    testImplementation("junit:junit:4.13.2")
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    androidTestImplementation(libs.androidx.junit)
+    //androidTestImplementation(libs.androidx.espresso.core)
+
+    androidTestImplementation ("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation( "com.google.truth:truth:1.0.1")
+    androidTestImplementation( "android.arch.core:core-testing:1.0.0")
 
     //Hilt-Dagger
     val hilt_version = "2.46.1"

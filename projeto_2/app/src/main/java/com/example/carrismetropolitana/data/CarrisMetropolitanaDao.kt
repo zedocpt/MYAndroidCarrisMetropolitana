@@ -23,7 +23,8 @@ interface CarrisMetropolitanaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavorite(favoriteDbModel: FavoriteDbModel)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    //@Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     suspend fun updateFavorite(favoriteDbModel: FavoriteDbModel)
 
     @Query("DELETE from fav_lines_tbl")
