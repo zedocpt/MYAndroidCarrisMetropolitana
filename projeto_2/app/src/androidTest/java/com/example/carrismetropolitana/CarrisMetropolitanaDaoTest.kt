@@ -65,8 +65,7 @@ class CarrisMetropolitanaDaoTest {
     }
 
     @Test
-    fun updateFavoriteAnDReturnsTrue() = runBlocking {
-        //insert word
+    fun insertAFavoriteAndReturn2True() = runBlocking {
         val favoriteDbModel = FavoriteDbModel(
             id = "1001",
             short_name = "1001",
@@ -74,8 +73,23 @@ class CarrisMetropolitanaDaoTest {
             color = "#C61D23",
             text_color = "#FFFFFF"
         )
-
         carrisMetropolitanaDao.insertFavorite(favoriteDbModel)
+        val favoriteOnDb = carrisMetropolitanaDao.getFavById(favoriteDbModel.id)
+        Assert.assertEquals(favoriteOnDb.id, favoriteDbModel.id)
+    }
+
+    @Test
+    fun updateFavoriteAnDReturnsTrue() = runBlocking {
+        //insert word
+        val initialFavorite = FavoriteDbModel(
+            id = "1001",
+            short_name = "1001",
+            long_name = "Alfragide (Estr Seminario) - Reboleira (Estação)",
+            color = "#C61D23",
+            text_color = "#FFFFFF"
+        )
+
+        carrisMetropolitanaDao.insertFavorite(initialFavorite)
 
         // create updated word
         val updatedFavorite = FavoriteDbModel(
@@ -88,8 +102,7 @@ class CarrisMetropolitanaDaoTest {
 
         // update
         carrisMetropolitanaDao.updateFavorite(updatedFavorite)
-
-        // get word and assert if it equals to updated word
+        
         val result = carrisMetropolitanaDao.getFavById(updatedFavorite.id)
         Assert.assertEquals(result.long_name, updatedFavorite.long_name);
     }
@@ -105,6 +118,9 @@ class CarrisMetropolitanaDaoTest {
         )
 
         carrisMetropolitanaDao.insertFavorite(favoriteDbModel)
+        val result = carrisMetropolitanaDao.getFavById(favoriteDbModel.id)
+        Assert.assertEquals(result.long_name, favoriteDbModel.long_name);
+
         carrisMetropolitanaDao.deleteFavorite(favoriteDbModel.id)
 
         val latch = CountDownLatch(1)
@@ -115,6 +131,5 @@ class CarrisMetropolitanaDaoTest {
         }
         latch.await()
         job.cancelAndJoin()
-
     }
 }
