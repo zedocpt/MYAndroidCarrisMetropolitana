@@ -7,6 +7,7 @@ import com.example.carrismetropolitana.model.db.FavoriteDbModel
 import com.example.carrismetropolitana.model.db.toUiMode
 import com.example.carrismetropolitana.uiModel.favorite.FavoriteUiModel
 import com.example.carrismetropolitana.repository.CarrisMetropolitanaDbRepository
+import com.example.carrismetropolitana.repository.ICarrisMetropolitanaDbRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val repository: CarrisMetropolitanaDbRepository) :
+    private val repository: ICarrisMetropolitanaDbRepository
+) :
     ViewModel() {
 
     private val _favList = MutableStateFlow<List<FavoriteUiModel>>(emptyList())
@@ -27,7 +29,7 @@ class FavoriteViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(dispatcher) {
-            repository.getFavorite().distinctUntilChanged().collect { listOfFavs ->
+            repository.getFavoritesWithFlow().distinctUntilChanged().collect { listOfFavs ->
                 if (listOfFavs.isEmpty()) {
                     Log.d("TAG", ":Empty favs")
                     _favList.value = arrayListOf()
@@ -46,13 +48,13 @@ class FavoriteViewModel @Inject constructor(
     suspend fun getFavoriteById(id: String): FavoriteDbModel {
         var favorite: FavoriteDbModel? = null
         viewModelScope.launch(dispatcher) {
-            favorite = repository.getFavoriteById(id)
+            favorite = repository.getFavById(id)
         }.join() // Esperar até que a coroutine seja concluída
         return favorite!!
     }
 
     suspend fun getFavoriteByIdV2(id: String): FavoriteDbModel {
-       return repository.getFavoriteById(id)
+       return repository.getFavById(id)
     }
 
     suspend fun updateFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch(dispatcher) {

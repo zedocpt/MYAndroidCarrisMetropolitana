@@ -5,6 +5,8 @@ import androidx.room.Room
 import com.example.carrismetropolitana.data.CarrisMetropolitanaDao
 import com.example.carrismetropolitana.data.CarrisMetropolitanaDataBase
 import com.example.carrismetropolitana.network.CarrisMetropolitanaApi
+import com.example.carrismetropolitana.repository.CarrisMetropolitanaDbRepository
+import com.example.carrismetropolitana.repository.ICarrisMetropolitanaDbRepository
 import com.example.carrismetropolitana.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -17,10 +19,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
+
+    @Singleton
+    @Provides
+    fun provideDefaultShoppingRepository(
+        dao: CarrisMetropolitanaDao
+    ) = CarrisMetropolitanaDbRepository(dao) as ICarrisMetropolitanaDbRepository
 
     @Provides
     fun provideCoroutineDispatcher(): CoroutineDispatcher = Dispatchers.IO

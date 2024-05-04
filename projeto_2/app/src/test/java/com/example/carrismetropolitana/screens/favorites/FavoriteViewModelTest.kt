@@ -1,19 +1,15 @@
 package com.example.carrismetropolitana.screens.favorites
 
 
-import androidx.compose.runtime.collectAsState
 import com.example.carrismetropolitana.model.db.FavoriteDbModel
 import com.example.carrismetropolitana.repositories.FakeCarrisMetropolitanaRepository
-import com.example.carrismetropolitana.repository.CarrisMetropolitanaDbRepository
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 
@@ -21,7 +17,7 @@ class FavoriteViewModelTest {
 
     private lateinit var viewModel: FavoriteViewModel
 
-    private val repository = mockk<CarrisMetropolitanaDbRepository>()
+    private val repository = mockk<FakeCarrisMetropolitanaRepository>()
     private val dispatcher = StandardTestDispatcher()
 
     @Before
@@ -51,7 +47,7 @@ class FavoriteViewModelTest {
             text_color = "#FFFFFF"
         )
 
-        coEvery { repository.getFavoriteById("1001") } returns expectedFavorite
+        coEvery { repository.getFavById("1001") } returns expectedFavorite
 
         // Act
         val result = viewModel.getFavoriteByIdV2(expectedFavorite.id)

@@ -3,10 +3,11 @@ package com.example.carrismetropolitana.repositories
 import androidx.lifecycle.MutableLiveData
 import com.example.carrismetropolitana.data.CarrisMetropolitanaDao
 import com.example.carrismetropolitana.model.db.FavoriteDbModel
+import com.example.carrismetropolitana.repository.ICarrisMetropolitanaDbRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FakeCarrisMetropolitanaRepository : CarrisMetropolitanaDao {
+class FakeCarrisMetropolitanaRepository : ICarrisMetropolitanaDbRepository {
 
     private val listLines = mutableListOf<FavoriteDbModel>()
     private val observableLinesResponseDataItems = MutableLiveData<List<FavoriteDbModel>>(listLines)
