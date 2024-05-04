@@ -78,8 +78,14 @@ dependencies {
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.4.0")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation( "com.google.truth:truth:1.0.1")
-    androidTestImplementation( "android.arch.core:core-testing:1.0.0")
+    androidTestImplementation( "com.google.truth:truth:1.1.2")
+
+    androidTestImplementation( "android.arch.core:core-testing:2.1.0")
+    testImplementation ("io.mockk:mockk:1.13.10")
+
+    // Coroutines Test
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1")
+    testImplementation ("org.mockito:mockito-core:3.11.2")
 
     //Hilt-Dagger
     val hilt_version = "2.46.1"

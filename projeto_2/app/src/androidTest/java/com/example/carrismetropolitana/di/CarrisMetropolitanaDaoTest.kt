@@ -1,4 +1,4 @@
-package com.example.carrismetropolitana
+package com.example.carrismetropolitana.di
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
@@ -102,7 +102,7 @@ class CarrisMetropolitanaDaoTest {
 
         // update
         carrisMetropolitanaDao.updateFavorite(updatedFavorite)
-        
+
         val result = carrisMetropolitanaDao.getFavById(updatedFavorite.id)
         Assert.assertEquals(result.long_name, updatedFavorite.long_name);
     }

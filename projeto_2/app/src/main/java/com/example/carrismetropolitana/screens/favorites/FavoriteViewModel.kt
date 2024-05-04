@@ -8,6 +8,7 @@ import com.example.carrismetropolitana.model.db.toUiMode
 import com.example.carrismetropolitana.uiModel.favorite.FavoriteUiModel
 import com.example.carrismetropolitana.repository.CarrisMetropolitanaDbRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,14 +17,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavoriteViewModel @Inject constructor(private val repository: CarrisMetropolitanaDbRepository) :
+class FavoriteViewModel @Inject constructor(
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val repository: CarrisMetropolitanaDbRepository) :
     ViewModel() {
 
     private val _favList = MutableStateFlow<List<FavoriteUiModel>>(emptyList())
     val favList = _favList.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             repository.getFavorite().distinctUntilChanged().collect { listOfFavs ->
                 if (listOfFavs.isEmpty()) {
                     Log.d("TAG", ":Empty favs")
@@ -36,23 +39,31 @@ class FavoriteViewModel @Inject constructor(private val repository: CarrisMetrop
         }
     }
 
-    fun insertFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch {
+    fun insertFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch(dispatcher) {
         repository.insertFavorite(favoriteDbModel)
     }
 
-    fun getFavoriteById(id: String) = viewModelScope.launch {
-        repository.getFavoriteById(id)
+    suspend fun getFavoriteById(id: String): FavoriteDbModel {
+        var favorite: FavoriteDbModel? = null
+        viewModelScope.launch(dispatcher) {
+            favorite = repository.getFavoriteById(id)
+        }.join() // Esperar até que a coroutine seja concluída
+        return favorite!!
     }
 
-    fun updateFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch {
+    suspend fun getFavoriteByIdV2(id: String): FavoriteDbModel {
+       return repository.getFavoriteById(id)
+    }
+
+    suspend fun updateFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch(dispatcher) {
         repository.updateFavorite(favoriteDbModel)
     }
 
-    fun deleteAllFavorites() = viewModelScope.launch {
+    suspend fun deleteAllFavorites() = viewModelScope.launch {
         repository.deleteAllFavorites()
     }
 
-    fun deleteFavorite(favoriteId: String) = viewModelScope.launch {
+    fun deleteFavorite(favoriteId: String) = viewModelScope.launch(dispatcher) {
         repository.deleteFavorite(favoriteId)
     }
 }
