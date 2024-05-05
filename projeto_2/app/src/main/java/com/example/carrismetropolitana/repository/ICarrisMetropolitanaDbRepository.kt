@@ -9,7 +9,7 @@ interface ICarrisMetropolitanaDbRepository {
 
     fun getFavoritesWithFlow(): Flow<List<FavoriteDbModel>>
 
-    suspend fun getFavById(id: String): FavoriteDbModel
+    suspend fun getFavById(id: String): FavoriteDbModel?
 
     suspend fun insertFavorite(favoriteDbModel: FavoriteDbModel)
 

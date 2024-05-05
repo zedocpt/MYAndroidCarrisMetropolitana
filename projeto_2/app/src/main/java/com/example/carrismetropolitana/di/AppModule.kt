@@ -29,8 +29,8 @@ class AppModule {
         dao: CarrisMetropolitanaDao
     ) = CarrisMetropolitanaDbRepository(dao) as ICarrisMetropolitanaDbRepository
 
-    @Provides
-    fun provideCoroutineDispatcher(): CoroutineDispatcher = Dispatchers.IO
+  /*  @Provides
+    fun provideCoroutineDispatcher(): CoroutineDispatcher = Dispatchers.IO*/
 
     @Singleton
     @Provides

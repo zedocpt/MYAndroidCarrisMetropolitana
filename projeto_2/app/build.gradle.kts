@@ -80,7 +80,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation( "com.google.truth:truth:1.1.2")
 
-    androidTestImplementation( "android.arch.core:core-testing:2.1.0")
+    androidTestImplementation( "androidx.arch.core:core-testing:2.1.0")
     testImplementation ("io.mockk:mockk:1.13.10")
 
     // Coroutines Test

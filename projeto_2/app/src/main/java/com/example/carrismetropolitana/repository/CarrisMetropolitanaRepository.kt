@@ -3,6 +3,7 @@ package com.example.carrismetropolitana.repository
 import com.example.carrismetropolitana.data.DataOrException
 import com.example.carrismetropolitana.dataSource.LocalDbDataSource
 import com.example.carrismetropolitana.dataSource.NetWorkDataSource
+import com.example.carrismetropolitana.model.db.FavoriteDbModel
 import com.example.carrismetropolitana.model.responseData.alert.AlertsResponseData
 import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
 import com.example.carrismetropolitana.model.responseData.wrapper.LinesWrapper
@@ -20,7 +21,8 @@ class CarrisMetropolitanaRepository @Inject constructor(
             val response = dataSource.getLines()
             when (response) {
                 is Result.Success -> {
-                    val lineFavorites = localDbDataSource.getFavorites()
+                 //   val lineFavorites = localDbDataSource.getFavorites()
+                    val lineFavorites = arrayListOf<FavoriteDbModel>()
                     val linesNetWork = response.body
                     if (!linesNetWork.isNullOrEmpty()) {
                         if (lineFavorites.isNotEmpty()) {

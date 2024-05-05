@@ -39,14 +39,13 @@ class ShowLinesViewModel @Inject constructor(
         mutableStateOf(arrayListOf())
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             getLineMatchWithFavoritesUseCase().let { matchWithFavorites ->
                 val list = matchWithFavorites.data?.map {
                     it.toUIModel()
                 }
 
-                _linesList.value =
-                    DataOrException(list, matchWithFavorites.loading, matchWithFavorites.e)
+                _linesList.value = DataOrException(list, matchWithFavorites.loading, matchWithFavorites.e)
                 favoritelistFirstInteraction.value = true
             }
 

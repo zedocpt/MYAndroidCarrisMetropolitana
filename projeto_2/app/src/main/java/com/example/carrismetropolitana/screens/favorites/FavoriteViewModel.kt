@@ -19,7 +19,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val repository: ICarrisMetropolitanaDbRepository
 ) :
     ViewModel() {
@@ -28,36 +27,36 @@ class FavoriteViewModel @Inject constructor(
     val favList = _favList.asStateFlow()
 
     init {
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch {
             repository.getFavoritesWithFlow().distinctUntilChanged().collect { listOfFavs ->
                 if (listOfFavs.isEmpty()) {
-                    Log.d("TAG", ":Empty favs")
+                   // Log.d("TAG", ":Empty favs")
                     _favList.value = arrayListOf()
                 } else {
-                    Log.d("TAG", ":${favList.value}")
+                   // Log.d("TAG", ":${favList.value}")
                     _favList.value = listOfFavs.map { it.toUiMode() }
                 }
             }
         }
     }
 
-    fun insertFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch(dispatcher) {
+    fun insertFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch {
         repository.insertFavorite(favoriteDbModel)
     }
 
     suspend fun getFavoriteById(id: String): FavoriteDbModel {
         var favorite: FavoriteDbModel? = null
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch {
             favorite = repository.getFavById(id)
         }.join() // Esperar até que a coroutine seja concluída
         return favorite!!
     }
 
-    suspend fun getFavoriteByIdV2(id: String): FavoriteDbModel {
+    suspend fun getFavoriteByIdV2(id: String): FavoriteDbModel? {
        return repository.getFavById(id)
     }
 
-    suspend fun updateFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch(dispatcher) {
+    suspend fun updateFavorite(favoriteDbModel: FavoriteDbModel) = viewModelScope.launch {
         repository.updateFavorite(favoriteDbModel)
     }
 
@@ -65,7 +64,7 @@ class FavoriteViewModel @Inject constructor(
         repository.deleteAllFavorites()
     }
 
-    fun deleteFavorite(favoriteId: String) = viewModelScope.launch(dispatcher) {
+    fun deleteFavorite(favoriteId: String) = viewModelScope.launch {
         repository.deleteFavorite(favoriteId)
     }
 }
