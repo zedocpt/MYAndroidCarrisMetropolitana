@@ -2,6 +2,7 @@ package com.example.carrismetropolitana.navigation
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -38,7 +39,7 @@ fun CarrisMetropolitanaNavigation() {
         composable(CarrisMetropolitanaScreens.SHOW_LINES.name) {
             val showLinesViewModel = hiltViewModel<ShowLinesViewModel>()
             val favoriteViewModel = hiltViewModel<FavoriteViewModel>()
-            ShowLinesScreen(showLinesViewModel,favoriteViewModel, navController = navController, "Lines")
+            ShowLinesScreen(modifier = Modifier, showLinesViewModel,favoriteViewModel, navController = navController, "Lines")
         }
 
         composable(CarrisMetropolitanaScreens.Alert.name) {

@@ -1,6 +1,7 @@
 package com.example.carrismetropolitana.screens.showLines
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.carrismetropolitana.navigation.CarrisMetropolitanaScreens
+import com.example.carrismetropolitana.screens.composables.Loader
 import com.example.carrismetropolitana.screens.favorites.FavoriteViewModel
 import com.example.carrismetropolitana.uiModel.favorite.LinesWrapperUiModel
 import com.example.carrismetropolitana.uiModel.favorite.ToFavorite
@@ -40,6 +41,7 @@ import com.example.carrismetropolitana.widgets.CarrisMetropolitanaBottomNavigati
 
 @Composable
 fun ShowLinesScreen(
+    modifier: Modifier,
     showLinesViewModel: ShowLinesViewModel,
     favoriteViewModel: FavoriteViewModel,
     navController: NavHostController,
@@ -53,14 +55,10 @@ fun ShowLinesScreen(
             )
         },
         bottomBar = { CarrisMetropolitanaBottomNavigation(navController) }
-    ) { paddingValues ->
+    ) {  paddingValues ->
         val linesData = showLinesViewModel.linesList
         if (linesData.loading == true) {
-            CircularProgressIndicator(
-                Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-            )
+            Loader(modifier.fillMaxSize())
         } else {
             if (linesData.e == null) {
                 if (showLinesViewModel.linesFilterList.value.isNotEmpty()) {
@@ -152,63 +150,58 @@ fun LineDetailRow(
     onAddFavoriteClick: () -> Unit,
     onRemoveFavoriteClick: () -> Unit,
 ) {
-    Surface(
+    Row(
         modifier = Modifier
             .padding(3.dp)
             .fillMaxWidth()
+            .background(Color.White, shape = CircleShape.copy(topEnd = CornerSize(6.dp)))
             .clickable { onDetailClick.invoke() },
-        shape = CircleShape.copy(topEnd = CornerSize(6.dp)),
-        color = Color.White
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+        Surface(
+            modifier = Modifier.padding(8.dp),
+            shape = RoundedCornerShape(12.dp),
+            color = hexStringToColor(linesWrapperUiModel.lineUiModel.color)
         ) {
-            Surface(
-                modifier = Modifier.padding(8.dp),
-                shape = RoundedCornerShape(12.dp),
-                color = hexStringToColor(linesWrapperUiModel.lineUiModel.color)
-            ) {
-                Text(
-                    color = hexStringToColor(linesWrapperUiModel.lineUiModel.text_color),
-                    text = linesWrapperUiModel.lineUiModel.short_name,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
+            Text(
+                color = hexStringToColor(linesWrapperUiModel.lineUiModel.text_color),
+                text = linesWrapperUiModel.lineUiModel.short_name,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
 
-            Column(
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 8.dp)
+        ) {
+            Text(
+                text = linesWrapperUiModel.lineUiModel.long_name,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+
+        if (linesWrapperUiModel.isFavorite) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = null,
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp)
-            ) {
-                Text(
-                    text = linesWrapperUiModel.lineUiModel.long_name,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-
-            if (linesWrapperUiModel.isFavorite) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clickable {
-                            onRemoveFavoriteClick.invoke()
-                        }
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clickable {
-                            onAddFavoriteClick.invoke()
-                        }
-                )
-            }
+                    .padding(8.dp)
+                    .clickable {
+                        onRemoveFavoriteClick.invoke()
+                    }
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Default.FavoriteBorder,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clickable {
+                        onAddFavoriteClick()
+                    }
+            )
         }
     }
 }
