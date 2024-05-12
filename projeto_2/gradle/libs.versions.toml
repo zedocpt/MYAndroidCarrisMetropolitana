@@ -4,20 +4,30 @@ kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
-espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.9.0"
 composeBom = "2023.08.00"
-mediationTestSuite = "3.0.0"
-testing = "1.0.0"
 junitKtx = "1.1.5"
 runner = "1.5.2"
+espresso = "3.4.0"
+truth = "1.1.2"
+arch-core = "2.2.0"
+mockk = "1.13.10"
+coroutines-test = "1.6.1"
+mockito = "3.11.2"
+hilt = "2.48"
+hilt-nav = "1.2.0"
+retrofit = "2.10.0"
+converter-gson = "2.10.0"
+lifecycle = "2.7.0"
+nav = "2.7.7"
+room = "2.6.1"
+preview = "1.6.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -28,10 +38,28 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-mediation-test-suite = { group = "com.google.android.ads", name = "mediation-test-suite", version.ref = "mediationTestSuite" }
-testing = { group = "com.google.assistant.appactions", name = "testing", version.ref = "testing" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+
+#{ group = "", name = "", version.ref = "" }
+com-google-truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "arch-core" }
+io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
+org-jetbrains-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines-test" }
+org-mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+com-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+com-google-dagger-hilt-navigation = { group = "com.google.dagger", name = "hilt-navigation-compose", version.ref = "hilt-nav" }
+com-squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+com-squareup-retrofit2-gson-conv = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "nav" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref ="room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref ="room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref ="room" }
+androidx-compose-preview = { group = "androidx.compose.ui", name="ui-tooling-preview", version.ref ="preview"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

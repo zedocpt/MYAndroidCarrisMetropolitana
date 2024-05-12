@@ -65,57 +65,51 @@ dependencies {
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.runner)
 
-    //testImplementation(libs.junit)
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    androidTestImplementation(libs.androidx.junit)
-    //androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.junit)
 
-    androidTestImplementation ("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation ("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation (libs.androidx.junit)
+    androidTestImplementation (libs.androidx.test.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation( "com.google.truth:truth:1.1.2")
+    androidTestImplementation(libs.com.google.truth)
 
-    androidTestImplementation( "androidx.arch.core:core-testing:2.1.0")
-    testImplementation ("io.mockk:mockk:1.13.10")
+    androidTestImplementation(libs.androidx.arch.core.testing)
+    testImplementation (libs.io.mockk)
 
     // Coroutines Test
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1")
-    testImplementation ("org.mockito:mockito-core:3.11.2")
+    testImplementation (libs.org.jetbrains.kotlinx.coroutines.test)
+    testImplementation (libs.org.mockito.core)
 
     //Hilt-Dagger
-    val hilt_version = "2.46.1"
-    implementation("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-compiler:$hilt_version")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation(libs.com.google.dagger.hilt.android)
+    kapt(libs.com.google.dagger.hilt.compiler)
+    implementation(libs.com.google.dagger.hilt.navigation)
 
     //retrofit
-    val retrofit_version = "2.10.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
-    val converter_gson = "2.10.0"
-    implementation("com.squareup.retrofit2:converter-gson:$converter_gson")
-
-    val lifecycle_version = "2.7.0"
+    implementation(libs.com.squareup.retrofit2)
+    implementation(libs.com.squareup.retrofit2.gson.conv)
 
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // ViewModel utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
-    val nav_version = "2.7.7"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation(libs.androidx.navigation.compose)
 
     //Room
-    val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
 
-    implementation("androidx.room:room-ktx:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
+    // Previews
+    debugImplementation(libs.androidx.compose.preview)
+    implementation(libs.androidx.compose.preview)
 }
