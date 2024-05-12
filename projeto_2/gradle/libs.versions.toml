@@ -50,7 +50,7 @@ org-jetbrains-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name 
 org-mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 com-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
-com-google-dagger-hilt-navigation = { group = "com.google.dagger", name = "hilt-navigation-compose", version.ref = "hilt-nav" }
+com-google-dagger-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-nav" }
 com-squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 com-squareup-retrofit2-gson-conv = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
