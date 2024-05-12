@@ -8,6 +8,7 @@ import com.example.carrismetropolitana.model.responseData.alert.AlertsResponseDa
 import com.example.carrismetropolitana.model.responseData.lines.LineResponseData
 import com.example.carrismetropolitana.model.responseData.wrapper.LinesWrapper
 import com.example.carrismetropolitana.retrofit.Result
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class CarrisMetropolitanaRepository @Inject constructor(
@@ -19,6 +20,7 @@ class CarrisMetropolitanaRepository @Inject constructor(
         val linesWrapperList = arrayListOf<LinesWrapper>()
         try {
             val response = dataSource.getLines()
+            delay(1000) //TODO just to force seeing loading step
             when (response) {
                 is Result.Success -> {
                  //   val lineFavorites = localDbDataSource.getFavorites()
